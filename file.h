@@ -5,15 +5,16 @@ using namespace std;
 class Files
 {
 private:
+
+	/* data */
+public:
 	ifstream Infile;
 	fstream File;
 	ofstream infile;
-	/* data */
-public:
-	int loginfile(string filepath, int key);
+	Account loginfile(string filepath, int key);
 	void updatefile(string filepath, Account account, int key);
 	void insertfile(string filepath, Account value);
-	void deleteinfile(string filepath, string key);
+	void deleteinfile(string filepath, int key);
 	Files(/* args */);
 };
 
@@ -22,7 +23,7 @@ Files::Files()
 }
 
 // search in file using key word
-int Files::loginfile(string filepath, int key)
+Account  Files::loginfile(string filepath, int key)
 {    Account account;
      Infile.open(filepath,ios::binary);
 	 Infile.seekg(0, ios::beg);
@@ -30,10 +31,10 @@ int Files::loginfile(string filepath, int key)
 	 {
 		 if(account.getPin() == key)
 		 {
-			 return account.getPin();
+			 return account;
 		 }
 	 }	
-	return 0;
+	return account;		
 }
 
 // function which search key word in file
@@ -72,4 +73,25 @@ void Files::insertfile(string filepath, Account value)
 	infile.open(filepath, ios::binary | ios::app);
 	infile.write((char *)&value, sizeof(value));
 	infile.close();
+}
+void Files::deleteinfile(string filepath, int key){
+	Account account;
+	File.open(filepath, ios::binary | ios::in | ios::out);
+	if (!File.is_open())
+	{
+		cout << "file  could not be open " << endl;
+		return;
+	}
+	while (!File.eof())
+	{
+		File.read((char *)&account, sizeof(account));
+		if (account.getPin() == key)
+		{
+			int pos = (-1) * static_cast<int>(sizeof(account));
+			File.seekp(pos, ios::cur);
+			File.write((char *)&account, sizeof(account));
+			cout << "account deleted" << endl;
+		}
+	}
+	File.close();
 }
