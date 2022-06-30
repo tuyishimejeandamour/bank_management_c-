@@ -6,7 +6,7 @@ private:
      int account_no;
 	 int pin;
 	 int deposits;
-	 string names;
+	 char names[50];
 	
 	/* data */
 public:
@@ -20,7 +20,7 @@ public:
 
 	bool exist();
 	Account();
-	int create_account(int deposit, int account_no, string names);
+	int create_account();
 	
 	
 };
@@ -29,13 +29,18 @@ Account::Account(){
 
 }
 
-int Account::create_account(int deposit,  int account_no, string names)
+int Account::create_account()
 {
-	account_no = account_no;
-	deposit = deposit;
-	names = names;
-	pin = rand()%1000+1000;
-	return pin;
+	account_no = rand()%1000+1000;
+	cout<<"Enter pin: ";
+	cin>>pin;
+	cout<<"Enter name: ";
+	cin.ignore();
+	cin.getline(names,50);
+	cout<<"Enter initial deposit: ";
+	cin>>deposits;
+
+	return account_no;
 }	
 
 
@@ -62,7 +67,7 @@ void Account::withdraw(int amount){
 	deposits = deposits - amount;
 }
 bool Account::exist(){
-	if (this->pin)
+	if (this->pin > 0)
 	{
         return true;	/* code */
 	}

@@ -26,14 +26,21 @@ Files::Files()
 Account  Files::loginfile(string filepath, int key)
 {    Account account;
      Infile.open(filepath,ios::binary);
-	 Infile.seekg(0, ios::beg);
-	 while(Infile.read((char*)&account, sizeof(account)))
+	 if (!Infile)
 	 {
+		cout<<"error occured when openning the file"<<endl;
+		return account;
+	 }
+	 
+	 Infile.seekg(0, ios::beg);
+	 while(Infile.read(reinterpret_cast<char*> (&account), sizeof(Account)))
+	 { 
 		 if(account.getPin() == key)
 		 {
 			 return account;
 		 }
 	 }	
+	 Infile.close();
 	return account;		
 }
 
