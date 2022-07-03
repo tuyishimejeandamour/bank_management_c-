@@ -62,7 +62,7 @@ void Files::updatefile(string filepath, Account account, int key)
 			found = true;
 			int pos = (-1) * static_cast<int>(sizeof(account));
 			File.seekp(pos, ios::cur);
-			File.write((char *)&account, sizeof(account));
+			File.write(reinterpret_cast<char*>(&account), sizeof(account));
 			cout << "account updated" << endl;
 			found = true;
 		}
@@ -87,18 +87,22 @@ void Files::deleteinfile(string filepath, int key){
 	if (!File.is_open())
 	{
 		cout << "file  could not be open " << endl;
+		File.close();
 		return;
 	}
-	while (!File.eof())
+	infile.open("./data/temp.dat", ios::binary | ios::app);
+	File.seekg(0, ios::beg);
+	while (File.read((char *)&account, sizeof(account)))
 	{
-		File.read((char *)&account, sizeof(account));
-		if (account.getPin() == key)
+		if (account.getPin() != key)
 		{
-			int pos = (-1) * static_cast<int>(sizeof(account));
-			File.seekp(pos, ios::cur);
-			File.write((char *)&account, sizeof(account));
-			cout << "account deleted" << endl;
+			infile.write((char *)&account, sizeof(account));
 		}
-	}
+	}	
+	
 	File.close();
+	infile.close();
+	remove(filepath.c_str());	
+	rename("./data/temp.dat", filepath.c_str());
+	
 }
