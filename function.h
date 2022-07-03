@@ -68,7 +68,6 @@ void edit_account()
 void display_accounts()
 {
 	Account account;
-	int i = 0;
 	file.Infile.open("./data/account.dat", ios::binary);
 	if (!file.Infile.is_open())
 	{
@@ -76,25 +75,16 @@ void display_accounts()
 	}
 	else
 	{
-		file.Infile.seekg(0, ios::beg);
 		while (file.Infile.read((char *)&account, sizeof(account)))
 		{
-			if (!file.Infile.eof())
-			{
-				cout << "Account no: " << account.getAccountNo() << endl;
-				cout << "Name: " << account.getNames() << endl;
-				cout << "Balance: " << account.get_balance() << endl;
-				cout << "Pin: " << account.getPin() << endl;
-				cout << "-----------------------------------------------------" << endl;
-			}
-			else
-			{
-				break;
-			}
+			cout<<"Account Number: "<<account.getPin()<<endl;			
+			display_account(account);	
+			
 		}
+		file.Infile.close();
 	}
 
-	file.Infile.close();
+	
 }
 void display_account(Account account)
 {
